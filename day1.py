@@ -1,20 +1,54 @@
+import math
 inputFile = open("day1input.txt")
-inputText = map(str.rstrip, inputFile.readlines())
+puzzleInput = map(str.rstrip, inputFile.readlines())
 
-dialPointer = 50
-totalZeros = 0
+siteExample = [
+	"L68",
+	"L30",
+	"R48",
+	"L5",
+	"R60",
+	"L55",
+	"L1",
+	"L99",
+	"R14",
+	"L82"
+]
 
-for instruction in inputText:
-	print(f"About to execute: {instruction}. Dial at: {dialPointer}. Total Zeroes: {totalZeros}")
-	#rotate dial as instructed
-	if instruction[0] == "R":
-		dialPointer -= int(instruction[1:])
-	else:
-		dialPointer += int(instruction[1:])
-	#account for rotation
-	dialPointer = dialPointer % 100
-	#check if 0
-	if dialPointer == 0:
-		totalZeros += 1
+def executeOneStep(start: int, instruction: str) -> tuple[int]:
+	zeroesRecorded = 0
+	modification = parseLine(instruction)
+	final = start + modification
 
-print(totalZeros)
+	#count clicks
+	if final >= 100:
+		zeroesRecorded += final // 100
+	if final == 0:
+		zeroesRecorded += 1
+	if final < 0 and start != 0:
+		zeroesRecorded += abs(math.ceil(final / 100)) + 1
+	
+	final = final % 100
+
+	return (final, zeroesRecorded)
+
+def parseLine(line: str) -> int:
+	mult = 1
+	if line[0] == "L":
+		mult = -1
+	
+	return int(line[1:]) * mult
+
+def puzzle(inputText: list[str], debug = False):
+	dialPointer = 50
+	totalZeros = 0
+	for instruction in inputText:
+		outcome = executeOneStep(dialPointer, instruction)
+		dialPointer = outcome[0]
+		totalZeros += outcome[1]
+		if debug:
+			print(f"Executed command: {instruction}. Dial now at {dialPointer}. Total zeroes at {totalZeros}")
+	return totalZeros
+
+print(executeOneStep(50, "L150"))
+print(puzzle(puzzleInput))
