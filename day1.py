@@ -1,6 +1,6 @@
 import math
 inputFile = open("day1input.txt")
-puzzleInput = map(str.rstrip, inputFile.readlines())
+puzzleInput = inputFile.readlines()
 
 siteExample = [
 	"L68",
@@ -15,7 +15,7 @@ siteExample = [
 	"L82"
 ]
 
-def executeOneStep(start: int, instruction: str) -> tuple[int]:
+def executeOneStep(start: int, instruction: str) -> tuple[int, int]:
 	zeroesRecorded = 0
 	modification = parseLine(instruction)
 	final = start + modification
