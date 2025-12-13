@@ -1,3 +1,4 @@
+from math import floor, sqrt
 #Read in the input for the puzzle
 puzzleInput = open("day2input.txt").read().split(",")
 puzzleInputSplit = []
@@ -5,24 +6,27 @@ for i in range(len(puzzleInput)):
 	splitRange = puzzleInput[i].split("-")
 	puzzleInputSplit.append([int(splitRange[0]), int(splitRange[1])])
 
-#Takes in an ID, checks if it is valid or not
-def checkValidity(id: int) -> bool:
-	#all invalid IDs have to be even in length
-	if len(str(id)) % 2 != 0:
-		return True
-	
-	#here, all IDs will be even, and can be split in two and compared
-	stringId = str(id)
-	digits = len(stringId)
-	halfDigits = digits // 2
-	halves = [
-		stringId[:halfDigits],
-		stringId[halfDigits:]
-	]
-	if halves[0] == halves[1]:
-		return False
-	else:
-		return True
+#splits a string (though here it's used for casted ints) into n equal chunks
+#assumes that the len(a) % n == 0
+def splitIntoNChunks(a: str, n: int) -> list[str]:
+	chunkLength = len(a) // n
+	chunks = ["" for i in range(n)]
+	for i in range(n):
+		chunks[i], a = a[:chunkLength], a[chunkLength:]
+	return chunks
+
+#Takes ID, checks if it's valid
+def checkValidity(id: int, debug = False) -> bool:
+	idStr = str(id)
+	for i in range(2, len(idStr)+1):
+		if len(idStr) % i == 0:
+			chunks = splitIntoNChunks(idStr, i)
+			equal = all(x == chunks[0] for x in chunks)
+			if debug:
+				print(f"idStr: {idStr}, chunks: {chunks}, {equal}")
+			if equal:
+				return False
+	return True
 
 #Finds all invalid IDs within a given range
 def findInvalidIdInRange(start: int, stop: int) -> list[int]:
