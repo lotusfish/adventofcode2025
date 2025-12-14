@@ -9,7 +9,7 @@ def processInputFromFile(fileName: str) -> list[int]:
 	banks = list(map(int, banks))
 	return banks
 
-#gets all valid pairs of two activated batteries in a bank
+#gets all valid pairs of two activated batteries in a bank. part 1 only
 def pairsFromBank(bank: int) -> list[int]:
 	pairs = []
 	bankStr = str(bank)
@@ -19,6 +19,8 @@ def pairsFromBank(bank: int) -> list[int]:
 				pairs.append(int(bankStr[i] + bankStr[j]))
 	
 	return pairs
+
+
 
 #takes a list of banks and returns the sum of the largest joltages of each
 def maxJoltageFromBanks(banks: list[int]) -> int:
