@@ -35,6 +35,23 @@ def solve(data: list[str], threshold=4) -> int:
 				foundAt.append((y, x))
 	return accessibleRolls
 
+#takes in the puzzle, returns a solution following the rules of step 2
+def solvePart2(data: list[str], threshold=4) -> int:
+	workingData = data
+	totalRolls = 0
+	while True:
+		rollsThisIteration = 0
+		for y in range(len(data)):
+			for x in range(len(data[y])):
+				if getRollNeighbours(workingData, x, y) < threshold and workingData[y][x] == "@":
+					totalRolls += 1
+					rollsThisIteration += 1
+					workingData[y] = workingData[y][:x] + "." + workingData[y][x+1:] #removes roll
+		if rollsThisIteration == 0: #quits out if no changes are made - no more rolls can be removed
+			break
+	return totalRolls
+
+
 testData = {
 	"letters"  : ["abc","def","ghi"],
 	"allRolls" : ["@@@","@@@","@@@"],
@@ -44,4 +61,4 @@ testData = {
 
 puzzleInput = inputToLists("day4input.txt")
 
-print(solve(puzzleInput))
+print(solvePart2(testData["site"]))
